@@ -62,7 +62,7 @@ const Dashboard = () => {
         <Card bg="ramadan.purple" color="white" mb={6} overflow="hidden">
           <CardBody>
             <Heading size="md" mb={1}>
-              Ramadan 2024
+              Ramadan 1445
             </Heading>
             <Text>
               {ramadanStatus === "upcoming" && "Prepare for the blessed month"}
@@ -126,7 +126,7 @@ const Dashboard = () => {
           <Card>
             <CardBody>
               <Stat>
-                <StatLabel>Current Ramadan Day</StatLabel>
+                <StatLabel>Previous Ramadan</StatLabel>
                 <Flex alignItems="center" mt={2}>
                   <StatNumber>
                     {ramadanStatus === "upcoming" && "Coming Soon"}
