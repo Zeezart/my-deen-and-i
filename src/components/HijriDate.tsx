@@ -2,13 +2,34 @@
 import { Box, Text, useColorModeValue } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 
-// Simple Hijri date converter based on the Umm al-Qura calendar
-// This is a simplified version for demonstration purposes
+// Improved Hijri date converter
 const gregorianToHijri = (date: Date) => {
-  const islamicYear = Math.floor((date.getFullYear() - 621.5643) * (33 / 32));
-  const dayOfYear = Math.floor(
-    (date - new Date(date.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24)
-  );
+  // Corrected calculation
+  const day = date.getDate();
+  const month = date.getMonth();
+  const year = date.getFullYear();
+  
+  // Julian day calculation
+  let jd = Math.floor((365.25 * (year + 4716))) + Math.floor((30.6001 * (month + 1))) + day - 1524.5;
+  
+  // Adjust for Gregorian calendar
+  if (jd > 2299160) {
+    const a = Math.floor((year / 100));
+    jd += 2 - a + Math.floor((a / 4));
+  }
+  
+  // Calculate Hijri date
+  const b = Math.floor(((jd - 1867216.25) / 36524.25));
+  const c = jd + b - Math.floor((b / 4)) - 1525;
+  
+  // Days since start of Hijri era
+  const daysSinceHijri = jd - 1948084;
+  
+  // Calculate Hijri year, month, day
+  const hYear = Math.floor(((30 * daysSinceHijri + 10646) / 10631));
+  const hMonth = Math.floor((daysSinceHijri - 29 * Math.floor(((hYear * 10631) / 30)) + 29) / 29.5);
+  const hDay = Math.floor(daysSinceHijri - Math.floor(((hYear * 10631) / 30)) - Math.floor((hMonth * 29.5)) + 1);
+  
   const islamicMonths = [
     "Muharram",
     "Safar",
@@ -24,18 +45,15 @@ const gregorianToHijri = (date: Date) => {
     "Dhu al-Hijjah"
   ];
   
-  // Approximation - this would normally require a more complex calculation
-  const approxDaysSinceStartOfIslamicYear = (dayOfYear + 354 - 10) % 354;
-  let islamicMonth = Math.floor(approxDaysSinceStartOfIslamicYear / 29.5);
-  if (islamicMonth >= 12) islamicMonth = 11;
+  // Get month index (0-based)
+  const monthIndex = Math.max(0, Math.min(11, Math.floor(hMonth - 1)));
   
-  const islamicDay = Math.floor(approxDaysSinceStartOfIslamicYear % 29.5) + 1;
+  // Hard-coded Ramadan 2024 dates based on official announcement
+  // Ramadan 1445 starts on March 11, 2024 and ends on April 9, 2024
+  const ramadanStart2024 = new Date(2024, 2, 11); // Month is 0-indexed in JS
+  const ramadanEnd2024 = new Date(2024, 3, 9);
   
-  // Hard-coded Ramadan start for 2024 (March 11, 2024)
-  // In a real application, you would use a more accurate calculation or an API
-  const ramadanStart2024 = new Date(2024, 2, 11);
-  const isRamadan = date >= ramadanStart2024 && 
-    date <= new Date(2024, 3, 9);  // April 9, 2024 - end of Ramadan
+  const isRamadan = date >= ramadanStart2024 && date <= ramadanEnd2024;
   
   let ramadanDay = 0;
   if (isRamadan) {
@@ -45,10 +63,10 @@ const gregorianToHijri = (date: Date) => {
   }
   
   return {
-    day: islamicDay,
-    month: islamicMonth,
-    monthName: islamicMonths[islamicMonth],
-    year: islamicYear,
+    day: Math.round(hDay),
+    month: monthIndex,
+    monthName: islamicMonths[monthIndex],
+    year: Math.round(hYear),
     isRamadan,
     ramadanDay
   };
@@ -56,7 +74,7 @@ const gregorianToHijri = (date: Date) => {
 
 const HijriDate = () => {
   const [date, setDate] = useState(new Date());
-  const [hijriDate, setHijriDate] = useState(null);
+  const [hijriDate, setHijriDate] = useState<ReturnType<typeof gregorianToHijri> | null>(null);
   
   const bgColor = useColorModeValue("ramadan.gold", "ramadan.navy");
   const textColor = useColorModeValue("gray.800", "white");

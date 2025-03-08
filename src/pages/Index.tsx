@@ -2,7 +2,7 @@
 import { Box, Container, Heading, Text, VStack, SimpleGrid, Divider } from "@chakra-ui/react";
 import Layout from "../components/Layout";
 import FastingCalendar from "../components/FastingCalendar";
-import QuranTracker from "../components/QuranTracker";
+import QuranReader from "../components/QuranReader";
 import Dashboard from "../components/Dashboard";
 import GoodDeedsChallenge from "../components/GoodDeedsChallenge";
 import DhikrReminders from "../components/DhikrReminders";
@@ -15,13 +15,16 @@ const Index = () => {
       <HijriDate />
       <Dashboard />
       
-      <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={6}>
-        <FastingCalendar />
-        <QuranTracker />
+      <SimpleGrid columns={{ base: 1, lg: 1 }} spacing={6}>
+        <QuranReader />
       </SimpleGrid>
 
       <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={6} my={6}>
+        <FastingCalendar />
         <GoodDeedsChallenge />
+      </SimpleGrid>
+
+      <SimpleGrid columns={{ base: 1, lg: 1 }} spacing={6} my={6}>
         <DhikrReminders />
       </SimpleGrid>
 
