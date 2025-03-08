@@ -28,6 +28,25 @@ import { motion } from "framer-motion";
 const MotionBox = motion(Box);
 const MotionFlex = motion(Flex);
 
+// Add morning and evening adhkar to the good deeds
+const getMorningEveningAdhkar = () => {
+  const now = new Date();
+  const isMorning = now.getHours() < 12;
+  
+  return [
+    {
+      id: 100, // Use high IDs to avoid conflicts
+      text: isMorning ? "Complete Morning Adhkar" : "Complete Evening Adhkar",
+      category: "worship",
+    },
+    {
+      id: 101,
+      text: "Read Surah Al-Kahf (if it's Friday)",
+      category: "quran",
+    }
+  ];
+};
+
 const GoodDeedsChallenge = () => {
   const [deeds, setDeeds] = useState([]);
   const [completed, setCompleted] = useState<number[]>([]);
@@ -43,7 +62,11 @@ const GoodDeedsChallenge = () => {
       const completedDeeds = getCompletedDeeds();
       const currentStreak = getGoodDeedStreak();
       
-      setDeeds(dailyDeeds);
+      // Add adhkar challenges
+      const adhkarDeeds = getMorningEveningAdhkar();
+      const allDeeds = [...dailyDeeds, ...adhkarDeeds];
+      
+      setDeeds(allDeeds);
       setCompleted(completedDeeds);
       setStreak(currentStreak);
     };

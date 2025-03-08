@@ -1,80 +1,36 @@
 
-import { Box, Text, useColorModeValue } from "@chakra-ui/react";
+import { Box, Text, useColorModeValue, Spinner } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 
-// Improved Hijri date converter
-const gregorianToHijri = (date: Date) => {
-  // Corrected calculation
-  const day = date.getDate();
-  const month = date.getMonth();
-  const year = date.getFullYear();
+// Function to fetch Hijri date from API
+const fetchHijriDate = async () => {
+  // Using the AlAdhan API which is a reliable source for Islamic date calculations
+  const response = await fetch("https://api.aladhan.com/v1/gToH?date=" + 
+    new Date().toISOString().split('T')[0]);
   
-  // Julian day calculation
-  let jd = Math.floor((365.25 * (year + 4716))) + Math.floor((30.6001 * (month + 1))) + day - 1524.5;
-  
-  // Adjust for Gregorian calendar
-  if (jd > 2299160) {
-    const a = Math.floor((year / 100));
-    jd += 2 - a + Math.floor((a / 4));
+  if (!response.ok) {
+    throw new Error("Failed to fetch Hijri date");
   }
   
-  // Calculate Hijri date
-  const b = Math.floor(((jd - 1867216.25) / 36524.25));
-  const c = jd + b - Math.floor((b / 4)) - 1525;
-  
-  // Days since start of Hijri era
-  const daysSinceHijri = jd - 1948084;
-  
-  // Calculate Hijri year, month, day
-  const hYear = Math.floor(((30 * daysSinceHijri + 10646) / 10631));
-  const hMonth = Math.floor((daysSinceHijri - 29 * Math.floor(((hYear * 10631) / 30)) + 29) / 29.5);
-  const hDay = Math.floor(daysSinceHijri - Math.floor(((hYear * 10631) / 30)) - Math.floor((hMonth * 29.5)) + 1);
-  
-  const islamicMonths = [
-    "Muharram",
-    "Safar",
-    "Rabi' al-Awwal",
-    "Rabi' al-Thani",
-    "Jumada al-Awwal",
-    "Jumada al-Thani",
-    "Rajab",
-    "Sha'ban",
-    "Ramadan",
-    "Shawwal",
-    "Dhu al-Qi'dah",
-    "Dhu al-Hijjah"
-  ];
-  
-  // Get month index (0-based)
-  const monthIndex = Math.max(0, Math.min(11, Math.floor(hMonth - 1)));
-  
-  // Hard-coded Ramadan 2024 dates based on official announcement
-  // Ramadan 1445 starts on March 11, 2024 and ends on April 9, 2024
-  const ramadanStart2024 = new Date(2024, 2, 11); // Month is 0-indexed in JS
-  const ramadanEnd2024 = new Date(2024, 3, 9);
-  
-  const isRamadan = date >= ramadanStart2024 && date <= ramadanEnd2024;
-  
-  let ramadanDay = 0;
-  if (isRamadan) {
-    ramadanDay = Math.floor(
-      (date.getTime() - ramadanStart2024.getTime()) / (1000 * 60 * 60 * 24)
-    ) + 1;
-  }
-  
-  return {
-    day: Math.round(hDay),
-    month: monthIndex,
-    monthName: islamicMonths[monthIndex],
-    year: Math.round(hYear),
-    isRamadan,
-    ramadanDay
-  };
+  const data = await response.json();
+  return data.data;
+};
+
+// Calculate if it's Ramadan based on the Hijri date
+const isRamadanMonth = (hijriMonth: number) => {
+  return hijriMonth === 9; // Ramadan is the 9th month in Hijri calendar
 };
 
 const HijriDate = () => {
-  const [date, setDate] = useState(new Date());
-  const [hijriDate, setHijriDate] = useState<ReturnType<typeof gregorianToHijri> | null>(null);
+  const [gregorianDate, setGregorianDate] = useState(new Date());
+  
+  const { data: hijriData, isLoading, error } = useQuery({
+    queryKey: ['hijri-date', gregorianDate.toISOString().split('T')[0]],
+    queryFn: fetchHijriDate,
+    staleTime: 1000 * 60 * 60 * 12, // 12 hours
+    gcTime: 1000 * 60 * 60 * 24, // 24 hours
+  });
   
   const bgColor = useColorModeValue("ramadan.gold", "ramadan.navy");
   const textColor = useColorModeValue("gray.800", "white");
@@ -82,22 +38,53 @@ const HijriDate = () => {
   useEffect(() => {
     // Update date every day at midnight
     const timer = setInterval(() => {
-      setDate(new Date());
+      setGregorianDate(new Date());
     }, 1000 * 60 * 60 * 24);
-    
-    setHijriDate(gregorianToHijri(date));
     
     return () => {
       clearInterval(timer);
     };
   }, []);
   
-  // Update Hijri date when gregorian date changes
-  useEffect(() => {
-    setHijriDate(gregorianToHijri(date));
-  }, [date]);
+  if (isLoading) {
+    return (
+      <Box 
+        p={3} 
+        bg={bgColor} 
+        color={textColor}
+        borderRadius="md"
+        textAlign="center"
+        mb={4}
+        boxShadow="md"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="60px"
+      >
+        <Spinner size="sm" mr={2} />
+        <Text>Loading Islamic date...</Text>
+      </Box>
+    );
+  }
   
-  if (!hijriDate) return null;
+  if (error) {
+    return (
+      <Box 
+        p={3} 
+        bg="red.100" 
+        color="red.600"
+        borderRadius="md"
+        textAlign="center"
+        mb={4}
+        boxShadow="md"
+      >
+        <Text>Could not load Islamic date</Text>
+      </Box>
+    );
+  }
+  
+  const isRamadan = hijriData && isRamadanMonth(parseInt(hijriData.hijri.month.number));
+  const ramadanDay = isRamadan ? parseInt(hijriData.hijri.day) : 0;
   
   return (
     <Box 
@@ -110,19 +97,19 @@ const HijriDate = () => {
       boxShadow="md"
     >
       <Text fontSize="sm" fontWeight="bold">
-        {hijriDate.day} {hijriDate.monthName} {hijriDate.year} AH
+        {hijriData?.hijri.day} {hijriData?.hijri.month.en} {hijriData?.hijri.year} AH
       </Text>
       <Text fontSize="xs">
-        {date.toLocaleDateString(undefined, { 
+        {gregorianDate.toLocaleDateString(undefined, { 
           weekday: 'long', 
           year: 'numeric', 
           month: 'long', 
           day: 'numeric' 
         })}
       </Text>
-      {hijriDate.isRamadan && (
+      {isRamadan && (
         <Text fontSize="sm" fontWeight="bold" mt={1}>
-          Ramadan Day {hijriDate.ramadanDay}
+          Ramadan Day {ramadanDay}
         </Text>
       )}
     </Box>
