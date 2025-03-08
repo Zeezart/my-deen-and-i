@@ -1,4 +1,6 @@
-import { useLocation } from "react-router-dom";
+
+import { Box, Button, Container, Heading, Text, VStack } from "@chakra-ui/react";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
 const NotFound = () => {
@@ -12,15 +14,27 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">404</h1>
-        <p className="text-xl text-gray-600 mb-4">Oops! Page not found</p>
-        <a href="/" className="text-blue-500 hover:text-blue-700 underline">
+    <Container centerContent maxW="xl" py={20}>
+      <VStack spacing={6} textAlign="center">
+        <Heading size="4xl" color="ramadan.purple">
+          404
+        </Heading>
+        <Text fontSize="xl" mb={2}>
+          Oops! Page not found
+        </Text>
+        <Text color="gray.600" mb={6}>
+          The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
+        </Text>
+        <Button
+          as={RouterLink}
+          to="/"
+          size="lg"
+          colorScheme="purple"
+        >
           Return to Home
-        </a>
-      </div>
-    </div>
+        </Button>
+      </VStack>
+    </Container>
   );
 };
 

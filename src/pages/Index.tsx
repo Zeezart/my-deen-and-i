@@ -1,13 +1,30 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { Box, Container, Heading, Text, VStack, SimpleGrid, Divider } from "@chakra-ui/react";
+import Layout from "../components/Layout";
+import FastingCalendar from "../components/FastingCalendar";
+import QuranTracker from "../components/QuranTracker";
+import Dashboard from "../components/Dashboard";
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <Layout>
+      <Dashboard />
+      
+      <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={6}>
+        <FastingCalendar />
+        <QuranTracker />
+      </SimpleGrid>
+
+      <Box mt={12} textAlign="center" py={6}>
+        <Divider mb={6} />
+        <Heading size="sm" color="gray.600" mb={2}>
+          My Deen Support
+        </Heading>
+        <Text fontSize="sm" color="gray.500">
+          Track your Ramadan journey and Quran progress
+        </Text>
+      </Box>
+    </Layout>
   );
 };
 
