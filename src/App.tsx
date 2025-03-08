@@ -1,5 +1,5 @@
 
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Index from "./pages/Index";
@@ -10,6 +10,7 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <ChakraProvider theme={theme}>
+    <ColorModeScript initialColorMode={theme.config.initialColorMode} />
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>

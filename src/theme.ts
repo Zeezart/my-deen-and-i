@@ -1,5 +1,11 @@
 
-import { extendTheme } from "@chakra-ui/react";
+import { extendTheme, ThemeConfig } from "@chakra-ui/react";
+
+// Color mode config
+const config: ThemeConfig = {
+  initialColorMode: "light",
+  useSystemColorMode: false,
+};
 
 const colors = {
   brand: {
@@ -28,17 +34,18 @@ const colors = {
 
 const theme = extendTheme({
   colors,
+  config,
   fonts: {
     heading: `'Poppins', sans-serif`,
     body: `'Inter', sans-serif`,
   },
   styles: {
-    global: {
+    global: (props) => ({
       body: {
-        bg: "gray.50",
-        color: "gray.800",
+        bg: props.colorMode === "dark" ? "gray.900" : "gray.50",
+        color: props.colorMode === "dark" ? "gray.100" : "gray.800",
       },
-    },
+    }),
   },
   components: {
     Button: {
@@ -76,6 +83,16 @@ const theme = extendTheme({
           borderRadius: "xl",
           overflow: "hidden",
         },
+      },
+      variants: {
+        elevated: (props) => ({
+          container: {
+            bg: props.colorMode === "dark" ? "gray.800" : "white",
+          },
+        }),
+      },
+      defaultProps: {
+        variant: "elevated",
       },
     },
   },
