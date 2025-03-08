@@ -23,6 +23,7 @@ import {
   Stack,
   Textarea,
   useToast,
+  Spinner,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { getFastingDays, saveFastingDay } from "../services/storageService";
@@ -30,14 +31,10 @@ import { motion } from "framer-motion";
 
 const MotionBox = motion(Box);
 
-// Ramadan 2024 is expected to start on March 11 and end on April 9
-// (based on moon sighting, so dates may vary by location)
+// Ramadan 2024 (1445 Hijri) dates - subject to moon sighting
+// Ramadan 1445 is expected to start on March 11 and end on April 9, 2024
 const RAMADAN_START_DATE = new Date(2024, 2, 11); // March 11, 2024
 const RAMADAN_END_DATE = new Date(2024, 3, 9); // April 9, 2024
-
-const getDaysInMonth = (year: number, month: number) => {
-  return new Date(year, month + 1, 0).getDate();
-};
 
 const getRamadanDates = () => {
   const dates = [];
@@ -53,11 +50,19 @@ const getRamadanDates = () => {
 
 type DayStatus = "fasted" | "missed" | "exempt" | "none";
 
+interface HijriDateInfo {
+  day: string;
+  month: string;
+  year: string;
+}
+
 const FastingCalendar = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [status, setStatus] = useState<DayStatus>("none");
   const [notes, setNotes] = useState("");
   const [fastingData, setFastingData] = useState<Record<string, any>>({});
+  const [hijriDates, setHijriDates] = useState<Record<string, HijriDateInfo>>({});
+  const [isLoadingHijri, setIsLoadingHijri] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
@@ -74,6 +79,44 @@ const FastingCalendar = () => {
     });
     
     setFastingData(dataMap);
+    
+    // Fetch Hijri dates for the entire Ramadan period
+    const fetchHijriDates = async () => {
+      setIsLoadingHijri(true);
+      const ramadanDates = getRamadanDates();
+      const hijriDatesMap: Record<string, HijriDateInfo> = {};
+      
+      // For better performance, we'll batch the API requests for all Ramadan days
+      const datePromises = ramadanDates.map(async (date) => {
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = date.getFullYear();
+        const formattedDate = `${day}-${month}-${year}`; // Converts to dd-mm-yyyy
+        const dateString = date.toISOString().split("T")[0];
+        
+        try {
+          const response = await fetch(`https://api.aladhan.com/v1/gToH?date=${formattedDate}`);
+          const data = await response.json();
+          
+          if (data.code === 200) {
+            hijriDatesMap[dateString] = {
+              day: data.data.hijri.day,
+              month: data.data.hijri.month.en,
+              year: data.data.hijri.year
+            };
+          }
+        } catch (error) {
+          console.error("Error fetching Hijri date for", formattedDate, error);
+        }
+      });
+      
+      // Wait for all API requests to complete
+      await Promise.all(datePromises);
+      setHijriDates(hijriDatesMap);
+      setIsLoadingHijri(false);
+    };
+    
+    fetchHijriDates();
   }, []);
 
   const handleDateClick = (date: Date) => {
@@ -165,84 +208,109 @@ const FastingCalendar = () => {
         </Flex>
       </CardHeader>
       <CardBody>
-        <Grid templateColumns="repeat(7, 1fr)" gap={2} mb={4}>
-          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-            <Box
-              key={day}
-              textAlign="center"
-              fontWeight="bold"
-              fontSize="sm"
-              color="gray.600"
-              mb={2}
-            >
-              {day}
-            </Box>
-          ))}
+        {isLoadingHijri ? (
+          <Flex justify="center" align="center" py={10}>
+            <Spinner size="md" mr={3} />
+            <Text>Loading Hijri dates...</Text>
+          </Flex>
+        ) : (
+          <>
+            <Grid templateColumns="repeat(7, 1fr)" gap={2} mb={4}>
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                <Box
+                  key={day}
+                  textAlign="center"
+                  fontWeight="bold"
+                  fontSize="sm"
+                  color="gray.600"
+                  mb={2}
+                >
+                  {day}
+                </Box>
+              ))}
 
-          {/* Fill in empty cells for proper alignment */}
-          {Array.from({
-            length: RAMADAN_START_DATE.getDay(),
-          }).map((_, index) => (
-            <Box key={`empty-${index}`} height="40px" />
-          ))}
+              {/* Fill in empty cells for proper alignment */}
+              {Array.from({
+                length: RAMADAN_START_DATE.getDay(),
+              }).map((_, index) => (
+                <Box key={`empty-${index}`} height="60px" />
+              ))}
 
-          {/* Ramadan days */}
-          {ramadanDates.map((date, index) => {
-            const dateString = date.toISOString().split("T")[0];
-            const dayData = fastingData[dateString];
-            const status = dayData ? dayData.status : "none";
-            
-            return (
-              <MotionBox
-                key={dateString}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                height="40px"
-                borderRadius="md"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                cursor="pointer"
-                onClick={() => handleDateClick(date)}
-                position="relative"
-                border="1px solid"
-                borderColor={getStatusColor(status)}
-                bg={status !== "none" ? `${getStatusColor(status)}10` : "white"}
-              >
-                <Text fontSize="sm" fontWeight="medium">
-                  {date.getDate()}
-                </Text>
-                {status !== "none" && (
-                  <Box
-                    position="absolute"
-                    top="2px"
-                    right="2px"
-                    fontSize="10px"
-                    color={getStatusColor(status)}
-                    fontWeight="bold"
+              {/* Ramadan days */}
+              {ramadanDates.map((date, index) => {
+                const dateString = date.toISOString().split("T")[0];
+                const dayData = fastingData[dateString];
+                const status = dayData ? dayData.status : "none";
+                const hijriInfo = hijriDates[dateString];
+                
+                // Calculate Ramadan day number (1-30)
+                const ramadanDay = Math.floor(
+                  (date.getTime() - RAMADAN_START_DATE.getTime()) /
+                    (1000 * 60 * 60 * 24)
+                ) + 1;
+                
+                return (
+                  <MotionBox
+                    key={dateString}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    height="60px"
+                    borderRadius="md"
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                    justifyContent="center"
+                    cursor="pointer"
+                    onClick={() => handleDateClick(date)}
+                    position="relative"
+                    border="1px solid"
+                    borderColor={getStatusColor(status)}
+                    bg={status !== "none" ? `${getStatusColor(status)}10` : "white"}
+                    p={1}
                   >
-                    {getStatusIcon(status)}
-                  </Box>
-                )}
-              </MotionBox>
-            );
-          })}
-        </Grid>
+                    {/* Hijri Date (prominent) */}
+                    <Text fontSize="md" fontWeight="bold" lineHeight="1">
+                      {hijriInfo ? hijriInfo.day : ramadanDay}
+                    </Text>
+                    
+                    {/* Gregorian Date (smaller) */}
+                    <Text fontSize="xs" color="gray.500" lineHeight="1.2">
+                      {date.getDate()}
+                    </Text>
+                    
+                    {status !== "none" && (
+                      <Box
+                        position="absolute"
+                        top="2px"
+                        right="2px"
+                        fontSize="10px"
+                        color={getStatusColor(status)}
+                        fontWeight="bold"
+                      >
+                        {getStatusIcon(status)}
+                      </Box>
+                    )}
+                  </MotionBox>
+                );
+              })}
+            </Grid>
 
-        <Flex justifyContent="space-between" gap={2}>
-          <Flex align="center" gap={2}>
-            <Box h="12px" w="12px" borderRadius="full" bg="green.500"></Box>
-            <Text fontSize="xs">Fasted</Text>
-          </Flex>
-          <Flex align="center" gap={2}>
-            <Box h="12px" w="12px" borderRadius="full" bg="red.500"></Box>
-            <Text fontSize="xs">Missed</Text>
-          </Flex>
-          <Flex align="center" gap={2}>
-            <Box h="12px" w="12px" borderRadius="full" bg="yellow.500"></Box>
-            <Text fontSize="xs">Exempt</Text>
-          </Flex>
-        </Flex>
+            <Flex justifyContent="space-between" gap={2}>
+              <Flex align="center" gap={2}>
+                <Box h="12px" w="12px" borderRadius="full" bg="green.500"></Box>
+                <Text fontSize="xs">Fasted</Text>
+              </Flex>
+              <Flex align="center" gap={2}>
+                <Box h="12px" w="12px" borderRadius="full" bg="red.500"></Box>
+                <Text fontSize="xs">Missed</Text>
+              </Flex>
+              <Flex align="center" gap={2}>
+                <Box h="12px" w="12px" borderRadius="full" bg="yellow.500"></Box>
+                <Text fontSize="xs">Exempt</Text>
+              </Flex>
+            </Flex>
+          </>
+        )}
       </CardBody>
 
       {/* Day status modal */}

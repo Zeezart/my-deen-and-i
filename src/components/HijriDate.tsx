@@ -1,13 +1,10 @@
 
-import { Box, Text, useColorModeValue, Spinner } from "@chakra-ui/react";
+import { Box, Text, useColorModeValue, Spinner, Flex } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-
-
-
 
 const HijriDate = () => {
   const [hijriDate, setHijriDate] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const getHijriDate = async (gregorianDate) => {
     try {
@@ -40,6 +37,7 @@ const HijriDate = () => {
 
   useEffect(() => {
     const fetchHijriDate = async () => {
+      setIsLoading(true);
       const today = new Date();
       const day = String(today.getDate()).padStart(2, "0");
       const month = String(today.getMonth() + 1).padStart(2, "0");
@@ -50,6 +48,7 @@ const HijriDate = () => {
       if (hijri) {
         setHijriDate(hijri);
       }
+      setIsLoading(false);
     };
 
     fetchHijriDate();
@@ -57,25 +56,34 @@ const HijriDate = () => {
 
   const bgColor = useColorModeValue("ramadan.gold", "ramadan.navy");
   const textColor = useColorModeValue("gray.800", "white");
+  
   return (
-        <Box 
-          p={3} 
-          bg={bgColor} 
-          color={textColor}
-          borderRadius="md"
-          textAlign="center"
-          mb={4}
-          boxShadow="md"
-        >
-          <Text fontSize="sm" fontWeight="bold">
-            Hijri Date: {hijriDate}
+    <Box 
+      p={3} 
+      bg={bgColor} 
+      color={textColor}
+      borderRadius="md"
+      textAlign="center"
+      mb={4}
+      boxShadow="md"
+    >
+      {isLoading ? (
+        <Flex justifyContent="center" alignItems="center" py={1}>
+          <Spinner size="sm" mr={2} />
+          <Text>Loading date...</Text>
+        </Flex>
+      ) : (
+        <>
+          <Text fontSize="lg" fontWeight="bold">
+            {hijriDate}
           </Text>
-          <Text fontSize="xs">
+          <Text fontSize="xs" color={useColorModeValue("gray.600", "gray.300")}>
             {new Date().toLocaleDateString("en-GB")}
           </Text>
-          
-        </Box>
-      );
+        </>
+      )}
+    </Box>
+  );
 };
 
 export default HijriDate;
