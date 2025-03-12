@@ -1,4 +1,3 @@
-
 import {
   Box,
   Button,
@@ -33,10 +32,9 @@ import { useQuery } from "@tanstack/react-query";
 
 const MotionBox = motion(Box);
 
-// Ramadan 2024 is expected to start on March 11 and end on April 9
-// (based on moon sighting, so dates may vary by location)
-const RAMADAN_START_DATE = new Date(2024, 2, 11); // March 11, 2024
-const RAMADAN_END_DATE = new Date(2024, 3, 9); // April 9, 2024
+// Ramadan 2024 correctly started on March 1st and will end on April 9 (30 days)
+const RAMADAN_START_DATE = new Date(2024, 2, 1); // March 1, 2024
+const RAMADAN_END_DATE = new Date(2024, 2, 30); // March 30, 2024
 
 const formatHijriDay = (day) => {
   const suffixes = ["th", "st", "nd", "rd"];
