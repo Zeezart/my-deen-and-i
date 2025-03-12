@@ -1,3 +1,4 @@
+
 import {
   Box,
   Button,
@@ -32,9 +33,9 @@ import { useQuery } from "@tanstack/react-query";
 
 const MotionBox = motion(Box);
 
-// Ramadan 2024 correctly started on March 1st and will end on April 9 (30 days)
-const RAMADAN_START_DATE = new Date(2025, 2, 1); // March 1, 2024
-const RAMADAN_END_DATE = new Date(2025, 2, 30); // March 30, 2024
+// Ramadan 2024 started on March 1st and will end on March 30 (30 days)
+const RAMADAN_START_DATE = new Date(2024, 2, 1); // March 1, 2024
+const RAMADAN_END_DATE = new Date(2024, 2, 30); // March 30, 2024
 
 const formatHijriDay = (day) => {
   const suffixes = ["th", "st", "nd", "rd"];
@@ -51,7 +52,7 @@ const getHijriDateFormatted = async (gregorianDate) => {
     if (data.code === 200) {
       const hijriDay = data.data.hijri.day; // Day number
       const hijriMonth = data.data.hijri.month.en; // Month name (e.g., Ramadan)
-      const hijriYear = data.data.hijri.year; // Year (1446)
+      const hijriYear = data.data.hijri.year; // Year (1445)
 
       return {
         dayFormatted: formatHijriDay(hijriDay),
@@ -73,7 +74,7 @@ const getHijriDateFormatted = async (gregorianDate) => {
 
 const FastingCalendar = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [status, setStatus] = useState<"fasted" | "missed" | "exempt" | "none">("none");
+  const [status, setStatus] = useState<"fasted" | "missed" | "none">("none");
   const [notes, setNotes] = useState("");
   const [fastingData, setFastingData] = useState<Record<string, any>>({});
   const [hijriDates, setHijriDates] = useState<Record<string, any>>({});
@@ -163,7 +164,7 @@ const FastingCalendar = () => {
     // Save to local storage
     saveFastingDay({
       date: dateString,
-      status: status as "fasted" | "missed" | "exempt",
+      status: status as "fasted" | "missed",
       notes: notes,
     });
 
@@ -187,27 +188,23 @@ const FastingCalendar = () => {
     onClose();
   };
 
-  const getStatusColor = (status: "fasted" | "missed" | "exempt" | "none") => {
+  const getStatusColor = (status: "fasted" | "missed" | "none") => {
     switch (status) {
       case "fasted":
         return "green.500";
       case "missed":
         return "red.500";
-      case "exempt":
-        return "yellow.500";
       default:
         return "gray.300";
     }
   };
 
-  const getStatusIcon = (status: "fasted" | "missed" | "exempt" | "none") => {
+  const getStatusIcon = (status: "fasted" | "missed" | "none") => {
     switch (status) {
       case "fasted":
         return "✓";
       case "missed":
         return "✗";
-      case "exempt":
-        return "⊘";
       default:
         return "";
     }
@@ -328,10 +325,6 @@ const FastingCalendar = () => {
                 <Box h="12px" w="12px" borderRadius="full" bg="red.500"></Box>
                 <Text fontSize="xs">Missed</Text>
               </Flex>
-              <Flex align="center" gap={2}>
-                <Box h="12px" w="12px" borderRadius="full" bg="yellow.500"></Box>
-                <Text fontSize="xs">Exempt</Text>
-              </Flex>
             </Flex>
           </>
         )}
@@ -355,11 +348,10 @@ const FastingCalendar = () => {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <RadioGroup value={status} onChange={(value) => setStatus(value as "fasted" | "missed" | "exempt" | "none")}>
+            <RadioGroup value={status} onChange={(value) => setStatus(value as "fasted" | "missed" | "none")}>
               <Stack direction="column">
                 <Radio value="fasted">Fasted</Radio>
                 <Radio value="missed">Missed</Radio>
-                <Radio value="exempt">Exempt</Radio>
               </Stack>
             </RadioGroup>
 

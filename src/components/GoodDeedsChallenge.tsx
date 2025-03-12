@@ -11,7 +11,6 @@ import {
   Checkbox,
   Badge,
   Flex,
-  Icon,
   useColorModeValue,
   Divider,
   Progress
@@ -28,23 +27,29 @@ import { motion } from "framer-motion";
 const MotionBox = motion(Box);
 const MotionFlex = motion(Flex);
 
-// Add morning and evening adhkar to the good deeds
+// Generate morning and evening adhkar based on time of day and day of week
 const getMorningEveningAdhkar = () => {
   const now = new Date();
   const isMorning = now.getHours() < 12;
+  const isFriday = now.getDay() === 5; // 5 is Friday
   
-  return [
+  const adhkarDeeds = [
     {
       id: 100, // Use high IDs to avoid conflicts
       text: isMorning ? "Complete Morning Adhkar" : "Complete Evening Adhkar",
       category: "worship",
-    },
-    {
-      id: 101,
-      text: "Read Surah Al-Kahf (if it's Friday)",
-      category: "quran",
     }
   ];
+  
+  if (isFriday) {
+    adhkarDeeds.push({
+      id: 101,
+      text: "Read Surah Al-Kahf (Friday's special Sunnah)",
+      category: "quran",
+    });
+  }
+  
+  return adhkarDeeds;
 };
 
 const GoodDeedsChallenge = () => {

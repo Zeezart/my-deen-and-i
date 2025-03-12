@@ -1,6 +1,7 @@
+
 type FastingDay = {
   date: string;
-  status: "fasted" | "missed" | "exempt";
+  status: "fasted" | "missed";
   notes?: string;
 };
 
@@ -97,7 +98,18 @@ export const getDailyGoodDeeds = (): GoodDeed[] => {
   }
   
   // Generate new challenges for today
-  return generateDailyGoodDeeds();
+  const newDeeds = generateDailyGoodDeeds();
+  
+  // Save the new deeds for today
+  const newChallenge: DailyChallenge = {
+    date: todayStr,
+    deeds: newDeeds,
+    completed: []
+  };
+  
+  localStorage.setItem("dailyChallenge", JSON.stringify(newChallenge));
+  
+  return newDeeds;
 };
 
 export const getCompletedDeeds = (): number[] => {
@@ -121,8 +133,10 @@ export const markDeedCompleted = (deedId: number): void => {
   const currentDeeds = getDailyGoodDeeds();
   let completed = getCompletedDeeds();
   
-  // Add the deed to completed list if not already there
-  if (!completed.includes(deedId)) {
+  // Toggle deed completion
+  if (completed.includes(deedId)) {
+    completed = completed.filter(id => id !== deedId);
+  } else {
     completed.push(deedId);
   }
   
@@ -173,7 +187,7 @@ export const updateGoodDeedStreak = (completedAllToday: boolean): void => {
   return;
 };
 
-// Generate 3 random good deeds from our collection
+// Generate random good deeds from our collection
 export const generateDailyGoodDeeds = (): GoodDeed[] => {
   const allDeeds: GoodDeed[] = [
     { id: 1, text: "Give charity (even if a small amount)", category: "charity" },
@@ -190,12 +204,39 @@ export const generateDailyGoodDeeds = (): GoodDeed[] => {
     { id: 12, text: "Recite morning and evening adhkar", category: "dhikr" },
     { id: 13, text: "Smile at someone and spread positivity", category: "kindness" },
     { id: 14, text: "Forgive someone who has wronged you", category: "kindness" },
-    { id: 15, text: "Pray 2 rakah nafl (voluntary) prayer", category: "worship" }
+    { id: 15, text: "Pray 2 rakah nafl (voluntary) prayer", category: "worship" },
+    { id: 16, text: "Visit a sick person", category: "kindness" },
+    { id: 17, text: "Study a portion of Islamic knowledge", category: "worship" },
+    { id: 18, text: "Send Salawat upon the Prophet ﷺ 10 times", category: "dhikr" },
+    { id: 19, text: "Do dhikr while walking or commuting", category: "dhikr" },
+    { id: 20, text: "Give a sincere compliment to someone", category: "kindness" },
+    { id: 21, text: "Make an intention to improve one aspect of your character", category: "worship" },
+    { id: 22, text: "Memorize a new verse from the Quran", category: "quran" },
+    { id: 23, text: "Read about the life of a companion of the Prophet ﷺ", category: "worship" },
+    { id: 24, text: "Share food with a neighbor", category: "kindness" },
+    { id: 25, text: "Donate Islamic books or materials", category: "charity" }
   ];
   
-  // Shuffle array and get first 3 elements
-  const shuffled = [...allDeeds].sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, 3);
+  // Create a seed based on today's date to get consistent but different results each day
+  const today = new Date();
+  const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+  
+  // Simple seeded random function
+  const seededRandom = (min: number, max: number, seed: number) => {
+    const x = Math.sin(seed) * 10000;
+    const rand = x - Math.floor(x);
+    return Math.floor(rand * (max - min)) + min;
+  };
+  
+  // Shuffle array using the seeded random
+  const shuffledDeeds = [...allDeeds];
+  for (let i = shuffledDeeds.length - 1; i > 0; i--) {
+    const j = seededRandom(0, i + 1, seed * (i + 1));
+    [shuffledDeeds[i], shuffledDeeds[j]] = [shuffledDeeds[j], shuffledDeeds[i]];
+  }
+  
+  // Return first 3 elements
+  return shuffledDeeds.slice(0, 3);
 };
 
 // Dhikr services

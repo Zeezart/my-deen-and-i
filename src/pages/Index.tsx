@@ -8,6 +8,7 @@ import DhikrReminders from "../components/DhikrReminders";
 import AppSettings from "../components/AppSettings";
 import HijriDate from "../components/HijriDate";
 import AdhkarSection from "../components/AdhkarSection";
+import QuranProgressTracker from "../components/QuranProgressTracker";
 
 const Index = () => {
   return (
@@ -17,10 +18,11 @@ const Index = () => {
       
       <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={6} my={6}>
         <FastingCalendar />
-        <GoodDeedsChallenge />
+        <QuranProgressTracker />
       </SimpleGrid>
 
-      <SimpleGrid columns={{ base: 1, lg: 1 }} spacing={6} my={6}>
+      <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={6} my={6}>
+        <GoodDeedsChallenge />
         <DhikrReminders />
       </SimpleGrid>
       
