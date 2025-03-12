@@ -53,29 +53,29 @@ const AppSettings = () => {
     }
   }, []);
   
-  const handleToggleDarkMode = () => {
-    const newSettings = { ...settings, darkMode: !settings.darkMode };
-    setSettings(newSettings);
-    updateUserSettings(newSettings);
-    toggleColorMode();
-  };
+  // const handleToggleDarkMode = () => {
+  //   const newSettings = { ...settings, darkMode: !settings.darkMode };
+  //   setSettings(newSettings);
+  //   updateUserSettings(newSettings);
+  //   toggleColorMode();
+  // };
   
-  const handleToggleNotifications = () => {
-    const newSettings = { ...settings, notificationsEnabled: !settings.notificationsEnabled };
-    setSettings(newSettings);
-    updateUserSettings(newSettings);
+  // const handleToggleNotifications = () => {
+  //   const newSettings = { ...settings, notificationsEnabled: !settings.notificationsEnabled };
+  //   setSettings(newSettings);
+  //   updateUserSettings(newSettings);
     
-    // Request notification permission if turning on
-    if (newSettings.notificationsEnabled && Notification.permission !== "granted") {
-      Notification.requestPermission();
-    }
-  };
+  //   // Request notification permission if turning on
+  //   if (newSettings.notificationsEnabled && Notification.permission !== "granted") {
+  //     Notification.requestPermission();
+  //   }
+  // };
   
-  const handleToggleDhikrReminders = () => {
-    const newSettings = { ...settings, dhikrRemindersEnabled: !settings.dhikrRemindersEnabled };
-    setSettings(newSettings);
-    updateUserSettings(newSettings);
-  };
+  // const handleToggleDhikrReminders = () => {
+  //   const newSettings = { ...settings, dhikrRemindersEnabled: !settings.dhikrRemindersEnabled };
+  //   setSettings(newSettings);
+  //   updateUserSettings(newSettings);
+  // };
   
   const handleResetProgress = () => {
     resetAllProgress();
@@ -103,7 +103,7 @@ const AppSettings = () => {
       
       <CardBody>
         <VStack spacing={6} align="stretch">
-          <FormControl display="flex" alignItems="center" justifyContent="space-between">
+          {/* <FormControl display="flex" alignItems="center" justifyContent="space-between">
             <FormLabel htmlFor="dark-mode" mb="0">
               Dark Mode
             </FormLabel>
@@ -139,7 +139,7 @@ const AppSettings = () => {
               isDisabled={!settings.notificationsEnabled}
             />
           </FormControl>
-          
+           */}
           <Divider my={2} />
           
           <Box textAlign="center">

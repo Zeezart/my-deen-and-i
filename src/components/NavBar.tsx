@@ -84,16 +84,16 @@ const NavBar = () => {
                 textDecoration: "none",
               }}
             >
-              My Deen Support
+              My Deen and I
             </Text>
           </Flex>
 
-          <Flex display={{ base: "none", md: "flex" }} ml={10}>
+          {/* <Flex display={{ base: "none", md: "flex" }} ml={10}>
             <DesktopNav />
-          </Flex>
+          </Flex> */}
         </Flex>
 
-        <Stack
+        {/* <Stack
           flex={{ base: 1, md: 0 }}
           justify={"flex-end"}
           direction={"row"}
@@ -110,7 +110,7 @@ const NavBar = () => {
           >
             Dashboard
           </Button>
-        </Stack>
+        </Stack> */}
       </Flex>
 
       <MotionBox
@@ -185,7 +185,7 @@ const NAV_ITEMS: Array<NavItem> = [
   },
   {
     label: "Quran Progress",
-    href: "/quran",
+    href: "/",
   },
 ];
 
