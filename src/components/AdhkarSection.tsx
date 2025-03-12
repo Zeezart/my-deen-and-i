@@ -34,7 +34,7 @@ const fetchAdhkar = async (category: string) => {
   return getMockAdhkar(category);
 };
 
-// Reliable adhkar data
+// Reliable adhkar data from Hisnul Muslim
 const getMockAdhkar = (category: string) => {
   const morningAdhkar = [
     {
@@ -106,6 +106,41 @@ const getMockAdhkar = (category: string) => {
       translation: "O Allah, I have reached the morning and call upon You and the bearers of Your Throne, Your angels and all of Your creation to witness that You are Allah, none has the right to be worshipped except You, alone, without partner and that Muhammad is Your servant and Messenger.",
       reference: "Abu Dawud",
       repeat: 4
+    },
+    {
+      id: 29,
+      arabic: "اللَّهُمَّ مَا أَصْبَحَ بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ",
+      translation: "O Allah, what blessing I or any of Your creation have reached this morning is from You alone, without partner, so for You is all praise and unto You all thanks.",
+      reference: "Abu Dawud",
+      repeat: 1
+    },
+    {
+      id: 30,
+      arabic: "اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ",
+      translation: "O Allah, by You we have reached the morning and by You we have reached the evening, by You we live and by You we die, and to You is the resurrection.",
+      reference: "Tirmidhi",
+      repeat: 1
+    },
+    {
+      id: 31,
+      arabic: "أَصْبَحْنَا عَلَى فِطْرَةِ الْإِسْلَامِ، وَعَلَى كَلِمَةِ الْإِخْلَاصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ، حَنِيفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِينَ",
+      translation: "We have reached the morning upon the fitrah (natural state) of Islam, and upon the word of sincerity, and upon the religion of our Prophet Muhammad, and upon the religion of our father Ibrahim, who was upright and a Muslim and was not from among the polytheists.",
+      reference: "Ahmad",
+      repeat: 1
+    },
+    {
+      id: 32,
+      arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
+      translation: "Glory is to Allah and praise is to Him",
+      reference: "Muslim",
+      repeat: 100
+    },
+    {
+      id: 33,
+      arabic: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+      translation: "None has the right to be worshipped except Allah, alone, without partner. To Him belongs all sovereignty and praise and He is over all things omnipotent.",
+      reference: "Bukhari and Muslim",
+      repeat: 10
     }
   ];
   
@@ -172,6 +207,34 @@ const getMockAdhkar = (category: string) => {
       translation: "O Allah, grant my body health, O Allah, grant my hearing health, O Allah, grant my sight health. None has the right to be worshipped except You.",
       reference: "Abu Dawud",
       repeat: 3
+    },
+    {
+      id: 34,
+      arabic: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذِهِ اللَّيْلَةِ وَخَيْرَ مَا بَعْدَهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَذِهِ اللَّيْلَةِ وَشَرِّ مَا بَعْدَهَا، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ",
+      translation: "We have reached the evening and at this very time the whole kingdom belongs to Allah. All praise is for Allah. None has the right to be worshipped except Allah, alone, without any partner. To Him belongs the kingdom, and to Him belongs all praise, and He has power over everything. My Lord, I ask You for the good of this night and the good of what follows it, and I seek refuge in You from the evil of this night and the evil of what follows it. My Lord, I seek refuge in You from laziness and the evil of pride. My Lord, I seek refuge in You from the punishment of the Fire and the punishment of the grave.",
+      reference: "Muslim",
+      repeat: 1
+    },
+    {
+      id: 35,
+      arabic: "اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ",
+      translation: "O Allah, by You we have reached the evening and by You we have reached the morning, by You we live and by You we die, and to You is the final return.",
+      reference: "Tirmidhi",
+      repeat: 1
+    },
+    {
+      id: 36,
+      arabic: "أَمْسَيْنَا عَلَى فِطْرَةِ الْإِسْلَامِ، وَعَلَى كَلِمَةِ الْإِخْلَاصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ، حَنِيفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِينَ",
+      translation: "We have reached the evening upon the fitrah (natural state) of Islam, and upon the word of sincerity, and upon the religion of our Prophet Muhammad, and upon the religion of our father Ibrahim, who was upright and a Muslim and was not from among the polytheists.",
+      reference: "Ahmad",
+      repeat: 1
+    },
+    {
+      id: 37,
+      arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
+      translation: "Glory is to Allah and praise is to Him",
+      reference: "Muslim",
+      repeat: 100
     }
   ];
   
@@ -238,6 +301,27 @@ const getMockAdhkar = (category: string) => {
       translation: "O Allah, You are my Lord, there is none worthy of worship but You. You created me and I am Your servant, and I abide by Your covenant and promise as best I can. I seek refuge in You from the evil of what I have done. I acknowledge Your favor upon me, and I acknowledge my sin, so forgive me, for none forgives sins but You.",
       reference: "Bukhari",
       repeat: 1
+    },
+    {
+      id: 38,
+      arabic: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+      translation: "None has the right to be worshipped except Allah, alone, without partner. To Him belongs all sovereignty and praise and He is over all things omnipotent.",
+      reference: "Bukhari and Muslim",
+      repeat: 100
+    },
+    {
+      id: 39,
+      arabic: "سُبْحَانَ اللَّهِ، وَالْحَمْدُ لِلَّهِ، وَلَا إِلَهَ إِلَّا اللَّهُ، وَاللَّهُ أَكْبَرُ",
+      translation: "Glory is to Allah, and praise is to Allah, and there is none worthy of worship but Allah, and Allah is the Most Great.",
+      reference: "Muslim",
+      repeat: 100
+    },
+    {
+      id: 40,
+      arabic: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ",
+      translation: "Glory and praise is to Allah, by the number of His creation, and His pleasure, and by the weight of His throne, and by the extent of His words.",
+      reference: "Muslim",
+      repeat: 3
     }
   ];
   
