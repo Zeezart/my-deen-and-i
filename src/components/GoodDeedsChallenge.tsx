@@ -56,6 +56,7 @@ const GoodDeedsChallenge = () => {
   const [deeds, setDeeds] = useState([]);
   const [completed, setCompleted] = useState<number[]>([]);
   const [streak, setStreak] = useState(0);
+  const [lastUpdated, setLastUpdated] = useState('');
   
   const bgColor = useColorModeValue("white", "gray.800");
   const headerBg = useColorModeValue("ramadan.burgundy", "ramadan.deepBlue");
@@ -74,23 +75,26 @@ const GoodDeedsChallenge = () => {
       setDeeds(allDeeds);
       setCompleted(completedDeeds);
       setStreak(currentStreak);
+      
+      // Set the last updated timestamp
+      setLastUpdated(new Date().toISOString());
     };
     
     loadDeeds();
     
-    // Refresh deeds at midnight
-    const now = new Date();
-    const night = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate() + 1,
-      0, 0, 0
-    );
-    const msToMidnight = night.getTime() - now.getTime();
+    // Check for new day every minute
+    const checkInterval = setInterval(() => {
+      const lastDate = new Date(lastUpdated || '').toDateString();
+      const currentDate = new Date().toDateString();
+      
+      // If the date has changed, reload deeds
+      if (lastDate !== currentDate) {
+        loadDeeds();
+      }
+    }, 60000); // Check every minute
     
-    const timerId = setTimeout(loadDeeds, msToMidnight);
-    return () => clearTimeout(timerId);
-  }, []);
+    return () => clearInterval(checkInterval);
+  }, [lastUpdated]);
   
   const handleDeedComplete = (deedId: number) => {
     // Toggle completion

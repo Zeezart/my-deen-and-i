@@ -21,7 +21,8 @@ import {
   Spinner,
   Button,
   useColorModeValue,
-  Badge
+  Badge,
+  Collapse
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -84,6 +85,27 @@ const getMockAdhkar = (category: string) => {
       translation: "I take refuge in Allah's perfect words from the evil of what He has created.",
       reference: "Muslim",
       repeat: 3
+    },
+    {
+      id: 20,
+      arabic: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+      translation: "In the name of Allah, Who with His Name nothing can cause harm in the earth nor in the heavens, and He is the All-Hearing, the All-Knowing.",
+      reference: "Abu Dawud, Tirmidhi",
+      repeat: 3
+    },
+    {
+      id: 21,
+      arabic: "رَضِـيتُ بِاللهِ رَبًّـا وَبِالإسْلامِ دِينًـا وَبِمُحَـمَّدٍ صلى الله عليه وسلم نَبِيًّـا",
+      translation: "I am pleased with Allah as my Lord, with Islam as my religion and with Muhammad ﷺ as my Prophet.",
+      reference: "Abu Dawud",
+      repeat: 3
+    },
+    {
+      id: 22,
+      arabic: "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ",
+      translation: "O Allah, I have reached the morning and call upon You and the bearers of Your Throne, Your angels and all of Your creation to witness that You are Allah, none has the right to be worshipped except You, alone, without partner and that Muhammad is Your servant and Messenger.",
+      reference: "Abu Dawud",
+      repeat: 4
     }
   ];
   
@@ -128,6 +150,27 @@ const getMockAdhkar = (category: string) => {
       arabic: "أَعـوذُ بِكَلِمـاتِ اللّهِ التّـامّـاتِ مِنْ شَـرِّ ما خَلَـق",
       translation: "I take refuge in Allah's perfect words from the evil of what He has created.",
       reference: "Muslim",
+      repeat: 3
+    },
+    {
+      id: 23,
+      arabic: "اللَّهُمَّ إِنِّي أَمْسَيْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ",
+      translation: "O Allah, I have reached the evening and call upon You and the bearers of Your Throne, Your angels and all of Your creation to witness that You are Allah, none has the right to be worshipped except You, alone, without partner and that Muhammad is Your servant and Messenger.",
+      reference: "Abu Dawud",
+      repeat: 4
+    },
+    {
+      id: 24,
+      arabic: "اللَّهُمَّ مَا أَمْسَى بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ",
+      translation: "O Allah, what blessing I or any of Your creation have reached in this evening is from You alone, without partner, so for You is all praise and unto You all thanks.",
+      reference: "Abu Dawud",
+      repeat: 1
+    },
+    {
+      id: 25,
+      arabic: "اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَهَ إِلَّا أَنْتَ",
+      translation: "O Allah, grant my body health, O Allah, grant my hearing health, O Allah, grant my sight health. None has the right to be worshipped except You.",
+      reference: "Abu Dawud",
       repeat: 3
     }
   ];
@@ -174,6 +217,27 @@ const getMockAdhkar = (category: string) => {
       translation: "O Allah, send prayers upon Muhammad and the followers of Muhammad, just as You sent prayers upon Ibrahim and the followers of Ibrahim. Verily, You are full of praise and majesty.",
       reference: "Bukhari",
       repeat: 10
+    },
+    {
+      id: 26,
+      arabic: "سُبْحَانَ اللَّهِ وَالْحَمْدُ لِلَّهِ وَلَا إِلَهَ إِلَّا اللَّهُ وَاللَّهُ أَكْبَرُ",
+      translation: "Glory is to Allah, and praise is to Allah, and there is none worthy of worship but Allah, and Allah is the Most Great.",
+      reference: "Muslim",
+      repeat: 100
+    },
+    {
+      id: 27,
+      arabic: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ يُحْيِي وَيُمِيتُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+      translation: "None has the right to be worshipped except Allah, alone, without partner. To Him belongs all sovereignty and praise. He gives life and causes death, and He is over all things omnipotent.",
+      reference: "Tirmidhi",
+      repeat: 10
+    },
+    {
+      id: 28,
+      arabic: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+      translation: "O Allah, You are my Lord, there is none worthy of worship but You. You created me and I am Your servant, and I abide by Your covenant and promise as best I can. I seek refuge in You from the evil of what I have done. I acknowledge Your favor upon me, and I acknowledge my sin, so forgive me, for none forgives sins but You.",
+      reference: "Bukhari",
+      repeat: 1
     }
   ];
   
@@ -185,6 +249,7 @@ const getMockAdhkar = (category: string) => {
 const AdhkarSection = () => {
   const [selectedCategory, setSelectedCategory] = useState("morning");
   const [expandedIndex, setExpandedIndex] = useState<number[]>([0]);
+  const [showAll, setShowAll] = useState(false);
   
   const { data: adhkar, isLoading, error } = useQuery({
     queryKey: ['adhkar', selectedCategory],
@@ -203,7 +268,11 @@ const AdhkarSection = () => {
     
     // Reset expanded accordion items when changing tabs
     setExpandedIndex([0]);
+    setShowAll(false);
   };
+
+  // Define the number of adhkar to show initially
+  const initialAdhkarCount = 6;
   
   return (
     <Card w="100%" overflow="hidden">
@@ -231,43 +300,58 @@ const AdhkarSection = () => {
                     <Text color="red.500">Failed to load adhkar. Please try again later.</Text>
                   </Box>
                 ) : (
-                  <Accordion allowMultiple index={expandedIndex} onChange={(indices: number[]) => setExpandedIndex(indices)}>
-                    {adhkar?.map((dhikr, index) => (
-                      <AccordionItem key={dhikr.id} mb={2} border="1px solid" borderColor="gray.200" borderRadius="md">
-                        <h2>
-                          <AccordionButton _expanded={{ bg: "purple.50", color: "purple.700" }}>
-                            <Box flex="1" textAlign="left" fontWeight="medium">
-                              {dhikr.arabic.length > 40 ? dhikr.arabic.substring(0, 40) + "..." : dhikr.arabic}
-                            </Box>
-                            {dhikr.repeat > 1 && (
-                              <Badge colorScheme="purple" mr={2}>
-                                {dhikr.repeat}x
-                              </Badge>
-                            )}
-                            <AccordionIcon />
-                          </AccordionButton>
-                        </h2>
-                        <AccordionPanel pb={4}>
-                          <VStack align="start" spacing={3}>
-                            <Text fontSize="lg" fontWeight="bold" fontFamily="serif" dir="rtl" width="100%" textAlign="right">
-                              {dhikr.arabic}
-                            </Text>
-                            <Text color="gray.600">
-                              {dhikr.translation}
-                            </Text>
-                            <Flex width="100%" justifyContent="space-between" fontSize="sm">
-                              <Text color="purple.600">
-                                {dhikr.repeat > 1 && `Repeat ${dhikr.repeat} times`}
+                  <>
+                    <Accordion allowMultiple index={expandedIndex} onChange={(indices: number[]) => setExpandedIndex(indices)}>
+                      {adhkar?.slice(0, showAll ? adhkar.length : initialAdhkarCount).map((dhikr, index) => (
+                        <AccordionItem key={dhikr.id} mb={2} border="1px solid" borderColor="gray.200" borderRadius="md">
+                          <h2>
+                            <AccordionButton _expanded={{ bg: "purple.50", color: "purple.700" }}>
+                              <Box flex="1" textAlign="left" fontWeight="medium">
+                                {dhikr.arabic.length > 40 ? dhikr.arabic.substring(0, 40) + "..." : dhikr.arabic}
+                              </Box>
+                              {dhikr.repeat > 1 && (
+                                <Badge colorScheme="purple" mr={2}>
+                                  {dhikr.repeat}x
+                                </Badge>
+                              )}
+                              <AccordionIcon />
+                            </AccordionButton>
+                          </h2>
+                          <AccordionPanel pb={4}>
+                            <VStack align="start" spacing={3}>
+                              <Text fontSize="lg" fontWeight="bold" fontFamily="serif" dir="rtl" width="100%" textAlign="right">
+                                {dhikr.arabic}
                               </Text>
-                              <Text color="gray.500">
-                                Reference: {dhikr.reference}
+                              <Text color="gray.600">
+                                {dhikr.translation}
                               </Text>
-                            </Flex>
-                          </VStack>
-                        </AccordionPanel>
-                      </AccordionItem>
-                    ))}
-                  </Accordion>
+                              <Flex width="100%" justifyContent="space-between" fontSize="sm">
+                                <Text color="purple.600">
+                                  {dhikr.repeat > 1 && `Repeat ${dhikr.repeat} times`}
+                                </Text>
+                                <Text color="gray.500">
+                                  Reference: {dhikr.reference}
+                                </Text>
+                              </Flex>
+                            </VStack>
+                          </AccordionPanel>
+                        </AccordionItem>
+                      ))}
+                    </Accordion>
+                    
+                    {adhkar && adhkar.length > initialAdhkarCount && (
+                      <Flex justify="center" mt={4}>
+                        <Button 
+                          size="sm" 
+                          colorScheme="purple" 
+                          variant="outline"
+                          onClick={() => setShowAll(!showAll)}
+                        >
+                          {showAll ? "Show Less" : `Show More (${adhkar.length - initialAdhkarCount} more)`}
+                        </Button>
+                      </Flex>
+                    )}
+                  </>
                 )}
               </TabPanel>
             ))}

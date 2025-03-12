@@ -80,6 +80,8 @@ const FastingCalendar = () => {
   const [hijriDates, setHijriDates] = useState<Record<string, any>>({});
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0); // Set to beginning of today
 
   const { isLoading } = useQuery({
     queryKey: ['hijriDates'],
@@ -142,6 +144,21 @@ const FastingCalendar = () => {
   };
 
   const handleDateClick = (date: Date) => {
+    // Check if the date is in the future
+    const now = new Date();
+    now.setHours(0, 0, 0, 0); // Set to beginning of today
+    
+    if (date > now) {
+      toast({
+        title: "Future date",
+        description: "You cannot mark future dates",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
+    
     setSelectedDate(date);
     const dateString = date.toISOString().split("T")[0];
     
@@ -264,6 +281,9 @@ const FastingCalendar = () => {
                 const dateDay = date.getDate();
                 const hijriDay = hijriData ? hijriData.day : "...";
                 
+                // Check if this date is in the future
+                const isFutureDate = date > currentDate;
+                
                 return (
                   <Tooltip
                     key={dateString}
@@ -276,29 +296,44 @@ const FastingCalendar = () => {
                     hasArrow
                   >
                     <MotionBox
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                      whileHover={isFutureDate ? {} : { scale: 1.05 }}
+                      whileTap={isFutureDate ? {} : { scale: 0.95 }}
                       height="60px"
                       borderRadius="md"
                       display="flex"
                       flexDirection="column"
                       alignItems="center"
                       justifyContent="center"
-                      cursor="pointer"
+                      cursor={isFutureDate ? "not-allowed" : "pointer"}
                       onClick={() => handleDateClick(date)}
                       position="relative"
                       border="1px solid"
-                      borderColor={getStatusColor(status)}
-                      bg={status !== "none" ? `${getStatusColor(status)}10` : "white"}
+                      borderColor={isFutureDate ? "gray.200" : getStatusColor(status)}
+                      bg={isFutureDate 
+                        ? "gray.100" 
+                        : status !== "none" 
+                          ? `${getStatusColor(status)}10` 
+                          : "white"
+                      }
+                      opacity={isFutureDate ? 0.6 : 1}
                       p={1}
                     >
-                      <Text fontSize="md" fontWeight="bold" lineHeight="1.1">
+                      <Text 
+                        fontSize="md" 
+                        fontWeight="bold" 
+                        lineHeight="1.1"
+                        color={isFutureDate ? "gray.400" : "inherit"}
+                      >
                         {hijriDay}
                       </Text>
-                      <Text fontSize="xs" color="gray.500" lineHeight="1">
+                      <Text 
+                        fontSize="xs" 
+                        color={isFutureDate ? "gray.400" : "gray.500"} 
+                        lineHeight="1"
+                      >
                         {dateDay}
                       </Text>
-                      {status !== "none" && (
+                      {status !== "none" && !isFutureDate && (
                         <Box
                           position="absolute"
                           top="2px"
@@ -324,6 +359,10 @@ const FastingCalendar = () => {
               <Flex align="center" gap={2}>
                 <Box h="12px" w="12px" borderRadius="full" bg="red.500"></Box>
                 <Text fontSize="xs">Missed</Text>
+              </Flex>
+              <Flex align="center" gap={2}>
+                <Box h="12px" w="12px" borderRadius="full" bg="gray.200"></Box>
+                <Text fontSize="xs">Future date (disabled)</Text>
               </Flex>
             </Flex>
           </>
