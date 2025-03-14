@@ -74,8 +74,9 @@ export const getQuranProgress = (): QuranProgress | null => {
 };
 
 export const getDefaultQuranProgress = (): QuranProgress => {
+  // Calculate the correct juz based on page 1
   return {
-    juz: 1,
+    juz: 1, // This will be calculated automatically in the component, but still stored
     page: 1,
     surah: 1,
     ayah: 1,

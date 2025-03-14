@@ -1,4 +1,3 @@
-
 import {
   Box,
   Button,
@@ -8,7 +7,6 @@ import {
   Heading,
   Text,
   VStack,
-  HStack,
   FormControl,
   FormLabel,
   NumberInput,
@@ -19,7 +17,6 @@ import {
   useToast,
   Progress,
   Flex,
-  Icon,
   useColorModeValue,
   Select
 } from "@chakra-ui/react";
@@ -150,35 +147,35 @@ const surahs = [
 // Object mapping juz number to page range
 const juzPageMap = [
   { juz: 1, startPage: 1, endPage: 21 },
-  { juz: 2, startPage: 22, endPage: 41 },
-  { juz: 3, startPage: 42, endPage: 61 },
-  { juz: 4, startPage: 62, endPage: 81 },
-  { juz: 5, startPage: 82, endPage: 101 },
-  { juz: 6, startPage: 102, endPage: 121 },
-  { juz: 7, startPage: 122, endPage: 141 },
-  { juz: 8, startPage: 142, endPage: 161 },
-  { juz: 9, startPage: 162, endPage: 181 },
-  { juz: 10, startPage: 182, endPage: 201 },
-  { juz: 11, startPage: 202, endPage: 221 },
-  { juz: 12, startPage: 222, endPage: 241 },
-  { juz: 13, startPage: 242, endPage: 261 },
-  { juz: 14, startPage: 262, endPage: 281 },
-  { juz: 15, startPage: 282, endPage: 301 },
-  { juz: 16, startPage: 302, endPage: 321 },
-  { juz: 17, startPage: 322, endPage: 341 },
-  { juz: 18, startPage: 342, endPage: 361 },
-  { juz: 19, startPage: 362, endPage: 381 },
-  { juz: 20, startPage: 382, endPage: 401 },
-  { juz: 21, startPage: 402, endPage: 421 },
-  { juz: 22, startPage: 422, endPage: 441 },
-  { juz: 23, startPage: 442, endPage: 461 },
-  { juz: 24, startPage: 462, endPage: 481 },
-  { juz: 25, startPage: 482, endPage: 501 },
-  { juz: 26, startPage: 502, endPage: 521 },
-  { juz: 27, startPage: 522, endPage: 541 },
-  { juz: 28, startPage: 542, endPage: 561 },
-  { juz: 29, startPage: 562, endPage: 581 },
-  { juz: 30, startPage: 582, endPage: 604 }
+  { juz: 2, startPage: 22, endPage: 42 },
+  { juz: 3, startPage: 43, endPage: 63 },
+  { juz: 4, startPage: 64, endPage: 84 },
+  { juz: 5, startPage: 85, endPage: 105 },
+  { juz: 6, startPage: 106, endPage: 126 },
+  { juz: 7, startPage: 127, endPage: 147 },
+  { juz: 8, startPage: 148, endPage: 168 },
+  { juz: 9, startPage: 169, endPage: 189 },
+  { juz: 10, startPage: 190, endPage: 210 },
+  { juz: 11, startPage: 211, endPage: 231 },
+  { juz: 12, startPage: 232, endPage: 252 },
+  { juz: 13, startPage: 253, endPage: 273 },
+  { juz: 14, startPage: 274, endPage: 294 },
+  { juz: 15, startPage: 295, endPage: 315 },
+  { juz: 16, startPage: 316, endPage: 336 },
+  { juz: 17, startPage: 337, endPage: 357 },
+  { juz: 18, startPage: 358, endPage: 378 },
+  { juz: 19, startPage: 379, endPage: 399 },
+  { juz: 20, startPage: 400, endPage: 420 },
+  { juz: 21, startPage: 421, endPage: 441 },
+  { juz: 22, startPage: 442, endPage: 462 },
+  { juz: 23, startPage: 463, endPage: 483 },
+  { juz: 24, startPage: 484, endPage: 504 },
+  { juz: 25, startPage: 505, endPage: 525 },
+  { juz: 26, startPage: 526, endPage: 546 },
+  { juz: 27, startPage: 547, endPage: 567 },
+  { juz: 28, startPage: 568, endPage: 588 },
+  { juz: 29, startPage: 589, endPage: 609 },
+  { juz: 30, startPage: 610, endPage: 630 }
 ];
 
 const QuranProgressTracker = () => {
@@ -195,7 +192,6 @@ const QuranProgressTracker = () => {
     // Load saved progress
     const savedProgress = getQuranProgress();
     if (savedProgress) {
-      setJuz(savedProgress.juz);
       setPage(savedProgress.page);
       setSurah(savedProgress.surah);
       setAyah(savedProgress.ayah);
@@ -203,29 +199,38 @@ const QuranProgressTracker = () => {
       // Calculate progress percentage (604 pages in standard mushaf)
       const progressPercent = Math.min(100, Math.round((savedProgress.page / 604) * 100));
       setProgress(progressPercent);
+      
+      // Calculate juz based on page
+      calculateJuz(savedProgress.page);
     } else {
       // Set default values
       const defaultProgress = getDefaultQuranProgress();
-      setJuz(defaultProgress.juz);
       setPage(defaultProgress.page);
       setSurah(defaultProgress.surah);
       setAyah(defaultProgress.ayah);
       setProgress(0);
+      calculateJuz(defaultProgress.page);
     }
   }, []);
 
-  // Update juz based on page number
-  useEffect(() => {
-    // Find which juz contains this page
-    const juzEntry = juzPageMap.find(entry => page >= entry.startPage && page <= entry.endPage);
-    if (juzEntry && juzEntry.juz !== juz) {
+  // Calculate juz based on page number
+  const calculateJuz = (pageNumber: number) => {
+    const juzEntry = juzPageMap.find(entry => 
+      pageNumber >= entry.startPage && pageNumber <= entry.endPage
+    );
+    if (juzEntry) {
       setJuz(juzEntry.juz);
     }
+  };
+  
+  // Update juz when page changes
+  useEffect(() => {
+    calculateJuz(page);
   }, [page]);
   
   const handleSaveProgress = () => {
     const newProgress = {
-      juz,
+      juz, // This is still saved but now calculated automatically
       page,
       surah,
       ayah,
@@ -317,28 +322,18 @@ const QuranProgressTracker = () => {
               </Flex>
             </Box>
             
-            <FormControl id="juz" mb={4}>
-              <FormLabel fontWeight="medium">Juz</FormLabel>
-              <Flex alignItems="center">
-                <NumberInput 
-                  min={1} 
-                  max={30} 
-                  value={juz} 
-                  onChange={(_, value) => setJuz(value)}
-                  width="100px"
-                >
-                  <NumberInputField />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
-                {juz > 0 && juz <= 30 && (
-                  <Text ml={4} fontSize="sm" color="gray.600">
-                    Juz {juz}: "{getJuzName(juz)}"
-                  </Text>
-                )}
-              </Flex>
+            <FormControl id="surah" mb={4}>
+              <FormLabel fontWeight="medium">Surah</FormLabel>
+              <Select 
+                value={surah} 
+                onChange={handleSurahChange}
+              >
+                {surahs.map(s => (
+                  <option key={s.number} value={s.number}>
+                    {s.number}. {s.name}
+                  </option>
+                ))}
+              </Select>
             </FormControl>
             
             <FormControl id="page" mb={4}>
@@ -357,21 +352,7 @@ const QuranProgressTracker = () => {
                 </NumberInputStepper>
               </NumberInput>
             </FormControl>
-            
-            <FormControl id="surah" mb={4}>
-              <FormLabel fontWeight="medium">Surah</FormLabel>
-              <Select 
-                value={surah} 
-                onChange={handleSurahChange}
-              >
-                {surahs.map(s => (
-                  <option key={s.number} value={s.number}>
-                    {s.number}. {s.name}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
-            
+                        
             <FormControl id="ayah" mb={6}>
               <FormLabel fontWeight="medium">Ayah</FormLabel>
               <NumberInput 
@@ -388,6 +369,15 @@ const QuranProgressTracker = () => {
                 </NumberInputStepper>
               </NumberInput>
             </FormControl>
+            
+            <Box mb={6} p={4} bg="gray.50" borderRadius="md">
+              <Text fontSize="md" fontWeight="medium" mb={2}>
+                Current Position: Juz {juz} ({getJuzName(juz)})
+              </Text>
+              <Text fontSize="sm" color="gray.600">
+                The juz is automatically calculated based on your page number.
+              </Text>
+            </Box>
             
             <Button 
               colorScheme="teal"
