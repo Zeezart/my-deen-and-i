@@ -35,10 +35,10 @@ const Index = () => {
       <Box mt={12} textAlign="center" py={6}>
         <Divider mb={6} />
         <Heading size="sm" color="gray.600" mb={2}>
-          My Deen Support
+          My Deen and I
         </Heading>
         <Text fontSize="sm" color="gray.500">
-          Track your Ramadan journey and spiritual growth
+          Track your Ramadan activities
         </Text>
       </Box>
     </Layout>

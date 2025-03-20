@@ -44,7 +44,7 @@ const formatHijriDay = (day) => {
   return `${day}${suffix}`;
 };
 
-const getHijriDateFormatted = async (gregorianDate) => {
+export const getHijriDateFormatted = async (gregorianDate) => {
   try {
     const response = await fetch(`https://api.aladhan.com/v1/gToH?date=${gregorianDate}`);
     const data = await response.json();
