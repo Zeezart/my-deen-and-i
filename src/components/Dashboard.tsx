@@ -43,10 +43,11 @@ const Dashboard = () => {
 
  
   
-  // Select a dua for today 
+  // Select a dua for today (cycle through available duas)
   const today = new Date();
-  const todaysDay = today.getDate()
-  const todaysDua = quranDuas.find(dua => todaysDay === dua.id)
+  const todaysDay = today.getDate();
+  const duaIndex = ((todaysDay - 1) % quranDuas.length);
+  const todaysDua = quranDuas[duaIndex];
 
 
   return (

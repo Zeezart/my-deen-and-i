@@ -172,5 +172,11 @@ export const quranDuas = [
     arabic: "رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي أَمْرِي",
     translation: "My Lord, expand for me my chest and ease for me my task.",
     reference: "Quran 20:25-26"
+  },
+  {
+    id: 30,
+    arabic: "رَبِّ زِدْنِي عِلْمًا",
+    translation: "My Lord, increase me in knowledge.",
+    reference: "Quran 20:114"
   }
 ];
